@@ -43,6 +43,6 @@ build_script:
 test_script:
   - ps: |
       # gci -recurse
-      ./$env:CONFIGURATION/expp.exe
+      gci -recurse expp.exe | foreach { &$_ }
 
 deploy: off

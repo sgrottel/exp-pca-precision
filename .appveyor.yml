@@ -41,6 +41,8 @@ build_script:
   - cmake --build . --parallel --config %CONFIGURATION% -- /m /v:minimal
 
 test_script:
-  - ps: ./expp.exe
+  - ps: |
+      gci -recurse
+      ./expp.exe
 
 deploy: off

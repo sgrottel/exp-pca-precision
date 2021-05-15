@@ -1,18 +1,18 @@
 shallow_clone: true
 
 platform:
-#  - x86
   - x64
+#  - x86
 
 configuration:
   - Debug
 #  - Release
 
 image:
-  - Visual Studio 2013
-  - Visual Studio 2015
-  - Visual Studio 2017
   - Visual Studio 2019
+  - Visual Studio 2017
+  - Visual Studio 2015
+  - Visual Studio 2013
 
 before_build:
   - ps: |
@@ -42,7 +42,7 @@ build_script:
 
 test_script:
   - ps: |
-      gci -recurse
-      ./expp.exe
+      # gci -recurse
+      ./$env:CONFIGURATION/expp.exe
 
 deploy: off

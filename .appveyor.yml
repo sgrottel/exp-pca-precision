@@ -43,7 +43,11 @@ build_script:
 test_script:
   - ps: |
       # gci -recurse
-      gci -recurse expp.exe | foreach { &$_ }
+      $expp = (gci -recurse expp.exe)[0].FullName
+      write-host $expp
+      gci -recurse *.testresult | rm
+      & $expp
+      $testresult = (gci -recurse *.testresult)[0].FullName
       Add-AppveyorTest -Name "Dummy" -Framework sgUnit -Filename expp.exe -Outcome Passed -Duration 0 # in milliseconds
 
 deploy: off

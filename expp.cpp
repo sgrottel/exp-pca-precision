@@ -3,10 +3,18 @@
 
 #include "expp.h"
 
-using namespace std;
+#include <fstream>
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	std::cout << "Hello CMake." << std::endl;
+
+	std::ofstream testResults("expp.testresult");
+	if (testResults.is_open())
+	{
+		testResults << "Dummy;Passed\n";
+		testResults.close();
+	}
+
 	return 0;
 }

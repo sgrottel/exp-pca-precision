@@ -5,7 +5,9 @@ cmake_minimum_required(VERSION 3.2)
 
 project("expp")
 
+include_directories("extern/precision")
+
 # Add source to this project's executable.
-add_executable(expp "expp.cpp" "expp.h")
+add_executable(expp "expp.cpp" "testdata.h" "testdata.cpp" "evaluator.h" "printHelper.h" "printHelper.cpp")
 
 # TODO: Add tests and install targets if needed.

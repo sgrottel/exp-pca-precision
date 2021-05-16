@@ -33,13 +33,13 @@ namespace
 
 template<typename T>
 expp::Evaluator<T>::Evaluator(TestData& data)
-	: m_data(data)
+	: m_data(data), m_center(), m_covar()
 {
 	// intentionally empty
 }
 
 template<typename T>
-void expp::Evaluator<T>::calcCenterBasic()
+void expp::Evaluator<T>::calcCenter()
 {
 	for (size_t d = 0; d < 4; ++d)
 		m_center[d] = 0;
@@ -58,5 +58,34 @@ void expp::Evaluator<T>::calcCenterBasic()
 	for (size_t d = 0; d < 4; ++d)
 		m_center[d] /= scale;
 }
+
+template<typename T>
+void expp::Evaluator<T>::calcCovarMatrix()
+{
+	for (size_t c = 0; c < 4; ++c)
+		for (size_t r = 0; r < 4; ++r)
+			m_covar[c][r] = 0;
+
+	unsigned int numPts = m_data.getNumPoints();
+	for (unsigned int p = 0; p < numPts; ++p)
+	{
+		math::Rational const* pt = m_data.getPoint(p);
+		T v[4];
+		for (size_t d = 0; d < 4; ++d)
+			v[d] = (helper<T>::fromRational(pt[d]) - m_center[d]);
+
+		for (size_t c = 0; c < 4; ++c)
+			for (size_t r = 0; r < 4; ++r)
+				m_covar[c][r] += (v[c] * v[r]);
+	}
+
+	T scale = helper<T>::fromUInt(numPts);
+	for (size_t c = 0; c < 4; ++c)
+		for (size_t r = 0; r < 4; ++r)
+		{
+			m_covar[c][r] /= scale;
+		}
+}
+
 
 #endif /* _evaluator_inl_included_ */

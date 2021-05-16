@@ -3,6 +3,7 @@
 #pragma once
 
 #include "testdata.h"
+#include <array>
 
 namespace expp
 {
@@ -13,14 +14,17 @@ namespace expp
 	public:
 		Evaluator(TestData& data);
 
-		void calcCenterBasic();
+		void calcCenter();
+		inline std::array<T, 4> const& getCenter() const { return m_center; }
 
-		inline T const* getCenter() const { return m_center; }
+		// center must be available!
+		void calcCovarMatrix();
+		inline std::array<std::array<T, 4>, 4> const& getCovar() const { return m_covar; }
 
 	private:
 		TestData& m_data;
-		T m_center[4];
-
+		std::array<T, 4> m_center;
+		std::array<std::array<T, 4>, 4> m_covar;
 	};
 
 }

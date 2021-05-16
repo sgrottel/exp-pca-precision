@@ -7,20 +7,35 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 
-template <typename T>
-math::Rational reportCenter(T const* c, math::Rational const* cBase)
+template <typename T, typename T1, typename T2>
+math::Rational reportMyIterDiff(
+	expp::MyIter<T1> const& vals,
+	expp::MyIter<T2> const& base
+)
 {
-	math::Rational maxDiff(0, 1);
-	math::Rational diff[4];
-	for (unsigned int d = 0; d < 4; ++d)
+	math::Rational maxDiff(0);
+
+	typename expp::MyIter<T1>::const_iterator valsEnd = vals.end();
+	typename expp::MyIter<T2>::const_iterator baseEnd = base.end();
+	typename expp::MyIter<T1>::const_iterator valsIt = vals.begin();
+	typename expp::MyIter<T2>::const_iterator baseIt = base.begin();
+
+	for (; valsIt != valsEnd; ++valsIt, ++baseIt)
 	{
-		diff[d] = math::Rational(c[d]) - cBase[d];
-		if (diff[d] < 0) diff[d] = -diff[d];
-		if (diff[d] > maxDiff) maxDiff = diff[d];
-		std::cout << "\t" << c[d] << "  err: " << expp::ViewR(diff[d]) << "\n";
+		T tDiff = *valsIt - static_cast<T>((*baseIt).to_double());
+		math::Rational diff = tDiff;
+		if (diff < 0) diff = -diff;
+
+		std::cout << "\t" << *valsIt << "  err: " << expp::ViewR(diff) << "\n";
+
+		if (maxDiff < diff) maxDiff = diff;
+
 	}
-	std::cout << "\t\tmax err: " << expp::ViewR(maxDiff) << "\n\n";
+	assert(baseIt == baseEnd);
+
+	std::cout << "\t\tmax err: " << expp::ViewR(maxDiff) << "\n";
 
 	return maxDiff;
 }
@@ -33,21 +48,50 @@ int main()
 	expp::Evaluator<double> evalDouble(testData);
 	expp::Evaluator<float> evalFloat(testData);
 
-	evalBase.calcCenterBasic();
-	math::Rational const* centerBase = evalBase.getCenter();
-	std::cout << "Ground truth center:\n"
-		<< "\t" << expp::ViewR(centerBase[0]) << "\n"
-		<< "\t" << expp::ViewR(centerBase[1]) << "\n"
-		<< "\t" << expp::ViewR(centerBase[2]) << "\n"
-		<< "\t" << expp::ViewR(centerBase[3]) << "\n\n";
+	evalBase.calcCenter();
+	std::array<math::Rational, 4> const& centerBase = evalBase.getCenter();
+	std::cout << "Ground truth center:\n";
+	expp::printMyIter(std::cout, expp::makeMyIter(centerBase));
+	std::cout << "\n";
 
-	evalDouble.calcCenterBasic();
+	evalDouble.calcCenter();
 	std::cout << "Double center naive:\n";
-	reportCenter(evalDouble.getCenter(), centerBase);
+	reportMyIterDiff<double>(
+		expp::makeMyIter(evalDouble.getCenter()),
+		expp::makeMyIter(centerBase));
+	std::cout << "\n";
 
-	evalFloat.calcCenterBasic();
+	evalFloat.calcCenter();
 	std::cout << "Float center naive:\n";
-	reportCenter(evalFloat.getCenter(), centerBase);
+	reportMyIterDiff<float>(
+		expp::makeMyIter(evalFloat.getCenter()),
+		expp::makeMyIter(centerBase));
+	std::cout << "\n";
+
+
+	evalBase.calcCovarMatrix();
+	std::array<std::array<math::Rational, 4>, 4> const& covarBase = evalBase.getCovar();
+	std::cout << "Ground truth covar:\n";
+	expp::printMyIter(std::cout, expp::makeMyIter(covarBase));
+	std::cout << "\n";
+
+	evalDouble.calcCovarMatrix();
+	std::cout << "Double covar naive:\n";
+	reportMyIterDiff<double>(
+		expp::makeMyIter(evalDouble.getCovar()),
+		expp::makeMyIter(covarBase));
+	std::cout << "\n";
+
+	evalFloat.calcCovarMatrix();
+	std::cout << "Float covar naive:\n";
+	reportMyIterDiff<float>(
+		expp::makeMyIter(evalFloat.getCovar()),
+		expp::makeMyIter(covarBase));
+	std::cout << "\n";
+
+
+	// eigenvalue search?
+	// https://www.wolframalpha.com/input/?i=eigenvalue+%7B%7B-1%2C2%2C5%7D%2C%7B3%2F4%2C4%2C-12%2F2%7D%2C%7B7%2C-8%2C9%7D%7D
 
 
 	std::ofstream testResults("expp.testresult");

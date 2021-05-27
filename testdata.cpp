@@ -2,6 +2,10 @@
 
 namespace
 {
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+#endif
 
 	static const math::Rational _1aga[] = {
 		math::Rational{ 3219, 1000 }, math::Rational{ -637, 1000 }, math::Rational{ 19462, 1000 }, math::Rational{ 2286, 1000 },
@@ -132,6 +136,9 @@ namespace
 		math::Rational{ 5150, 1000 }, math::Rational{ 4461, 1000 }, math::Rational{ 2116, 1000 }, math::Rational{ -1615, 1000 }
 	};
 
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 }
 
 unsigned int expp::TestData::getNumPoints() const

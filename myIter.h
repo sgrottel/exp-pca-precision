@@ -73,6 +73,9 @@ namespace expp
 
 		private:
 			const_iterator(DT const& d, size_t x, size_t y) : m_d(d), m_x(x), m_y(y) {}
+
+			const_iterator& operator=(const_iterator const& s);
+
 			DT const& m_d;
 			size_t m_x;
 			size_t m_y;
@@ -84,6 +87,9 @@ namespace expp
 		const_iterator end() const { return const_iterator(m_d, D1, D1); }
 
 	private:
+
+		MyIter& operator=(const MyIter&);
+
 		DT const& m_d;
 	};
 

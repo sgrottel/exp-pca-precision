@@ -21,6 +21,8 @@ namespace expp
 		inline ViewR(math::Rational const& r) : m_r(r) {}
 		inline math::Rational const& r() const { return m_r; }
 	private:
+		ViewR& operator=(ViewR const& s);
+
 		math::Rational const& m_r;
 	};
 

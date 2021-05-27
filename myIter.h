@@ -22,11 +22,14 @@ namespace expp
 		typedef typename std::array<T, D1>::const_iterator const_iterator;
 
 		MyIter(DT const& d) : m_d(d) {}
+		MyIter(MyIter const& s) : m_d(s.m_d) {}
 
 		typename DT::const_iterator begin() const { return m_d.begin(); }
 		typename DT::const_iterator end() const { return m_d.end(); }
 
 	private:
+		MyIter& operator=(const MyIter&);
+
 		DT const& m_d;
 	};
 

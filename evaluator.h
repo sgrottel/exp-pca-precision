@@ -22,6 +22,8 @@ namespace expp
 		inline std::array<std::array<T, 4>, 4> const& getCovar() const { return m_covar; }
 
 	private:
+		Evaluator& operator=(Evaluator const& s);
+
 		TestData& m_data;
 		std::array<T, 4> m_center;
 		std::array<std::array<T, 4>, 4> m_covar;

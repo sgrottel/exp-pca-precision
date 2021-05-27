@@ -134,12 +134,12 @@ namespace
 
 }
 
-const unsigned int expp::TestData::getNumPoints() const
+unsigned int expp::TestData::getNumPoints() const
 {
 	return sizeof(_1aga) / (4 * sizeof(math::Rational));
 }
 
-const math::Rational* expp::TestData::getPoint(unsigned int i) const
+math::Rational const * expp::TestData::getPoint(unsigned int i) const
 {
 	if (i >= getNumPoints()) return nullptr;
 	return &_1aga[i * 4];

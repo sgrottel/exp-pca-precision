@@ -12,9 +12,9 @@ namespace expp
 	{
 	public:
 
-		const unsigned int getNumPoints() const;
+		unsigned int getNumPoints() const;
 
-		const math::Rational* getPoint(unsigned int i) const;
+		math::Rational const * getPoint(unsigned int i) const;
 
 	};
 

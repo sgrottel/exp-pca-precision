@@ -83,6 +83,6 @@ test_script:
       gci -recurse *.testresult | rm
       & $expp
       $testresult = (gci -recurse *.testresult)[0].FullName
-      gc $testresult | foreach { $v = $_.split(';'); Add-AppveyorTest -Name $v[0] -Framework sgUnit -Filename expp.exe -Outcome ($v[1] -eq "true") -Duration 0 }
+      gc $testresult | foreach { $v = $_.split(';'); Add-AppveyorTest -Name $v[0] -Framework sgUnit -Filename expp.exe -Outcome $(If ($v[1] -eq "true") {"Passed"} Else {"Failed"}) -Duration 0 }
 
 deploy: off

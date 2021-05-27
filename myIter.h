@@ -7,6 +7,7 @@
 #pragma once
 
 #include <array>
+#include <stddef.h>
 
 namespace expp
 {

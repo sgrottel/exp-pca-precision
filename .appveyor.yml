@@ -83,6 +83,7 @@ test_script:
       gci -recurse *.testresult | rm
       & $expp
       $testresult = (gci -recurse *.testresult)[0].FullName
+      gc $testresult | foreach { echo $_.split(';') }
       Add-AppveyorTest -Name "Dummy" -Framework sgUnit -Filename expp.exe -Outcome Passed -Duration 0 # in milliseconds
 
 deploy: off

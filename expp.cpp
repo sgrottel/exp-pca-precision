@@ -48,6 +48,15 @@ int main()
 	expp::Evaluator<double> evalDouble(testData);
 	expp::Evaluator<float> evalFloat(testData);
 
+	std::ofstream testResults("expp.testresult");
+	if (!testResults.is_open())
+	{
+		std::cerr << "Failed to open testresults file for writing\n" << std::endl;
+		return -1;
+	}
+
+	math::Rational error;
+
 	evalBase.calcCenter();
 	std::array<math::Rational, 4> const& centerBase = evalBase.getCenter();
 	std::cout << "Ground truth center:\n";
@@ -56,16 +65,18 @@ int main()
 
 	evalDouble.calcCenter();
 	std::cout << "Double center naive:\n";
-	reportMyIterDiff<double>(
+	error = reportMyIterDiff<double>(
 		expp::makeMyIter(evalDouble.getCenter()),
 		expp::makeMyIter(centerBase));
+	testResults << "DCenterNaive;" << ((error < math::Rational(0.1)) ? "true" : "false") << "\n";
 	std::cout << "\n";
 
 	evalFloat.calcCenter();
 	std::cout << "Float center naive:\n";
-	reportMyIterDiff<float>(
+	error = reportMyIterDiff<float>(
 		expp::makeMyIter(evalFloat.getCenter()),
 		expp::makeMyIter(centerBase));
+	testResults << "FCenterNaive;" << ((error < math::Rational(0.1)) ? "true" : "false") << "\n";
 	std::cout << "\n";
 
 
@@ -77,16 +88,18 @@ int main()
 
 	evalDouble.calcCovarMatrix();
 	std::cout << "Double covar naive:\n";
-	reportMyIterDiff<double>(
+	error = reportMyIterDiff<double>(
 		expp::makeMyIter(evalDouble.getCovar()),
 		expp::makeMyIter(covarBase));
+	testResults << "DCovarNaive;" << ((error < math::Rational(0.1)) ? "true" : "false") << "\n";
 	std::cout << "\n";
 
 	evalFloat.calcCovarMatrix();
 	std::cout << "Float covar naive:\n";
-	reportMyIterDiff<float>(
+	error = reportMyIterDiff<float>(
 		expp::makeMyIter(evalFloat.getCovar()),
 		expp::makeMyIter(covarBase));
+	testResults << "FCovarNaive;" << ((error < math::Rational(0.1)) ? "true" : "false") << "\n";
 	std::cout << "\n";
 
 
@@ -94,12 +107,7 @@ int main()
 	// https://www.wolframalpha.com/input/?i=eigenvalue+%7B%7B-1%2C2%2C5%7D%2C%7B3%2F4%2C4%2C-12%2F2%7D%2C%7B7%2C-8%2C9%7D%7D
 
 
-	std::ofstream testResults("expp.testresult");
-	if (testResults.is_open())
-	{
-		testResults << "Dummy;Passed\n";
-		testResults.close();
-	}
+	testResults.close();
 
 	return 0;
 }

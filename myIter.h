@@ -76,8 +76,8 @@ namespace expp
 
 		MyIter(DT const& d) : m_d(d) {}
 
-		typename const_iterator begin() const { return const_iterator(m_d, 0, 0); }
-		typename const_iterator end() const { return const_iterator(m_d, D1, D1); }
+		const_iterator begin() const { return const_iterator(m_d, 0, 0); }
+		const_iterator end() const { return const_iterator(m_d, D1, D1); }
 
 	private:
 		DT const& m_d;

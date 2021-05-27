@@ -239,6 +239,6 @@ endif()
 include_directories("extern/precision")
 
 # Add source to this project's executable.
-add_executable(expp "expp.cpp" "testdata.h" "testdata.cpp" "evaluator.h" "printHelper.h" "printHelper.cpp" "myIter.h")
+add_executable(expp "expp.cpp" "testdata.h" "testdata.cpp" "evaluator.h" "printHelper.h"  "myIter.h")
 
 # TODO: Add tests and install targets if needed.

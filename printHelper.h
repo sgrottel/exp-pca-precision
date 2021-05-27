@@ -23,6 +23,7 @@ namespace expp
 	private:
 		math::Rational const& m_r;
 	};
+
 	template<typename ts>
 	static ts& operator<<(ts& s, ViewR const& v) {
 		return s << std::fixed << std::setprecision(20) << v.r().to_double() << " (" << v.r() << ")";

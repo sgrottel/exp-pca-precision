@@ -2,17 +2,22 @@ shallow_clone: true
 
 platform:
   - x64
-#  - x86
+  - x86
 
 configuration:
   - Debug
-#  - Release
+  - Release
 
 image:
   - Visual Studio 2019
   - Visual Studio 2017
   - Visual Studio 2015
   - Visual Studio 2013
+
+matrix:
+    exclude:
+    - image: Visual Studio 2019
+      platform: x64
 
 before_build:
   - ps: |

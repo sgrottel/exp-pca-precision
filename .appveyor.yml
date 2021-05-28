@@ -18,6 +18,12 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     generator: "-G\"Visual Studio 12 2013\""
     glmArguments: -DGLM_TEST_FORCE_PURE=ON
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON
 
 
 before_build:

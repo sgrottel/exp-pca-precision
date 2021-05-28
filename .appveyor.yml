@@ -13,19 +13,27 @@ environment:
   #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
   #  generator: "-G\"Visual Studio 16 2019\""
   #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
+  #- PLATFORM: x64
+  #  CONFIGURATION: Debug
+  #  APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+  #  generator: ""
+  #  arch: ""
+  #  CC: gcc-9
+  #  CXX: g++-9
+  #  glmArguments: -DGLM_TEST_FORCE_PURE=ON -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-9
+  #- PLATFORM: x86
+  #  CONFIGURATION: Release
+  #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+  #  generator: "-G\"Visual Studio 12 2013\""
+  #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
   - PLATFORM: x64
-    CONFIGURATION: Debug
+    CONFIGURATION: Release
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
     generator: ""
     arch: ""
     CC: gcc-9
     CXX: g++-9
-    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-9
-  - PLATFORM: x86
-    CONFIGURATION: Release
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-    generator: "-G\"Visual Studio 12 2013\""
-    glmArguments: -DGLM_TEST_FORCE_PURE=ON
+    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-9 -GLM_TEST_ENABLE_FAST_MATH=ON
 
 
 before_build:

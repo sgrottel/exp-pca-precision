@@ -26,6 +26,22 @@ environment:
   #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
   #  generator: "-G\"Visual Studio 12 2013\""
   #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
+  #- PLATFORM: x64
+  #  CONFIGURATION: Debug
+  #  APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+  #  generator: ""
+  #  arch: ""
+  #  CC: gcc-7
+  #  CXX: g++-7
+  #  glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+  #- PLATFORM: x64
+  #  CONFIGURATION: Debug
+  #  APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+  #  generator: ""
+  #  arch: ""
+  #  CC: gcc-7
+  #  CXX: g++-7
+  #  glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_FORCE_PURE=ON -- -DGLM_FORCE_CXX17 -DGLM_FORCE_PURE -std=c++17 -mfpmath=387
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -33,15 +49,23 @@ environment:
     arch: ""
     CC: gcc-7
     CXX: g++-7
-    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -mfpmath=387
   - PLATFORM: x64
-    CONFIGURATION: Release
+    CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
     generator: ""
     arch: ""
     CC: gcc-7
     CXX: g++-7
-    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_FORCE_PURE=ON
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffloat-store
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffast-math
 
 
 before_build:
@@ -50,7 +74,7 @@ before_build:
       cd build
       echo generator="$env:generator"
       echo arch="$env:arch"
-      cmake .. $env:generator $env:arch -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:glmArguments"
+      cmake .. $env:generator $env:arch -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_TEST_ENABLE=ON "$env:glmArguments"
 
 build_script:
   - cmake --build . --parallel --config %CONFIGURATION%

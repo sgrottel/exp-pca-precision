@@ -15,6 +15,7 @@ image:
   #- Visual Studio 2013
 
 environment:
+  arch: ""
   matrix:
     - GLM_ARGUMENTS: -DGLM_TEST_FORCE_PURE=ON
     #- GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_SSE2=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
@@ -49,6 +50,15 @@ matrix:
     - image: Visual Studio 2019
       platform: x64
 
+for:
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
+          platform: x64
+      environment:
+        arch: "Win64"
+
 before_build:
   - ps: |
       mkdir build
@@ -68,7 +78,6 @@ before_build:
       }
       if ($env:PLATFORM -eq "x64") {
           $env:generator="$env:generator Win64"
-          $env:arch="Win64"
       }
       echo generator="$env:generator"
       cmake .. -G "$env:generator" -A "$env:arch" -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"

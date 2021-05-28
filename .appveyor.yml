@@ -42,7 +42,7 @@ build_script:
 test_script:
   - ps: |
       # gci -recurse
-      $expp = (Get-ChildItem -recurse expp.exe)[0].FullName
+      $expp = (Get-ChildItem -recurse "expp.exe","expp")[0].FullName
       Write-Host $expp
       Get-ChildItem -recurse *.testresult | Remove-Item
       & $expp

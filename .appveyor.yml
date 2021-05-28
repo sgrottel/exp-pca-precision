@@ -26,7 +26,7 @@ for:
       - image: Visual Studio 2019
         platform: x64
   environment:
-    arch: "-A`"x64`""
+    arch: "-A\"x64\""
 
 before_build:
   - ps: |

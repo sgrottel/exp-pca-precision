@@ -21,10 +21,10 @@ before_build:
       $env:generator="Visual Studio 16 2019"
 
       if ($env:PLATFORM -eq "x64") {
-        $env:arch="Win64"
+        $env:arch="-A`"x64`""
       }
       echo generator="$env:generator"
-      cmake .. -G "$env:generator" -A "$env:arch" -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"
+      cmake .. -G"$env:generator" $env:arch -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"
 
 build_script:
   - cmake --build . --parallel --config %CONFIGURATION% -- /m /v:minimal

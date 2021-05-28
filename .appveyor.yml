@@ -2,17 +2,20 @@ shallow_clone: true
 
 environment:
   matrix:
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     generator: "-G\"Visual Studio 16 2019\""
     arch: "-A\"x64\""
-    glmArguments: -DGLM_TEST_FORCE_PURE=ON
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON
+
   - PLATFORM: x86
     CONFIGURATION: Release
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     generator: "-G\"Visual Studio 16 2019\""
-    glmArguments: -DGLM_TEST_FORCE_PURE=ON
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -21,11 +24,13 @@ environment:
     CC: gcc-9
     CXX: g++-9
     glmArguments: -DGLM_TEST_FORCE_PURE=ON -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-9
+
   - PLATFORM: x86
     CONFIGURATION: Release
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
     generator: "-G\"Visual Studio 12 2013\""
-    glmArguments: -DGLM_TEST_FORCE_PURE=ON
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -34,6 +39,7 @@ environment:
     CC: gcc-7
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -42,6 +48,7 @@ environment:
     CC: gcc-7
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_FORCE_PURE=ON -- -DGLM_FORCE_CXX17 -DGLM_FORCE_PURE -std=c++17 -mfpmath=387
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -50,6 +57,7 @@ environment:
     CC: gcc-7
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -mfpmath=387
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -58,6 +66,7 @@ environment:
     CC: gcc-7
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffloat-store
+
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
@@ -66,6 +75,69 @@ environment:
     CC: gcc-7
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffast-math
+
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffloat-store -mfpmath=387
+
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffast-math -mfpmath=387
+
+  - PLATFORM: x64
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -mfpmath=387
+
+  - PLATFORM: x64
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffloat-store
+
+  - PLATFORM: x64
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffast-math
+
+  - PLATFORM: x64
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffloat-store -mfpmath=387
+
+  - PLATFORM: x64
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -- -DGLM_FORCE_CXX17 -std=c++17 -ffast-math -mfpmath=387
 
 
 before_build:

@@ -1,25 +1,17 @@
 shallow_clone: true
 
-platform:
-  - x64
-  - x86
-configuration:
-  - Debug
-  - Release
-image:
-  - Visual Studio 2019
-
 environment:
   arch: ""
   GLM_ARGUMENTS: -DGLM_TEST_FORCE_PURE=ON
+  matrix:
+  - platform: x64
+    configuration: Debug
+    image: Visual Studio 2019
+  - platform: x86
+    configuration: Release
+    image: Visual Studio 2019
 
 for:
--
-  matrix:
-    only:
-      - image: Visual Studio 2019
-  environment:
-    generator: "Visual Studio 16 2019"
 -
   matrix:
     only:
@@ -27,6 +19,12 @@ for:
         platform: x64
   environment:
     arch: "-A\"x64\""
+-
+  matrix:
+    only:
+      - image: Visual Studio 2019
+  environment:
+    generator: "Visual Studio 16 2019"
 
 before_build:
   - ps: |

@@ -27,13 +27,21 @@ environment:
   #  generator: "-G\"Visual Studio 12 2013\""
   #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
   - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+  - PLATFORM: x64
     CONFIGURATION: Release
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
     generator: ""
     arch: ""
-    CC: gcc-9
-    CXX: g++-9
-    glmArguments: -DCMAKE_BUILD_TYPE=Release -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-9 -GLM_TEST_ENABLE_FAST_MATH=ON
+    CC: gcc-7
+    CXX: g++-7
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_FORCE_PURE=ON
 
 
 before_build:

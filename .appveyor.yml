@@ -13,16 +13,18 @@ environment:
   #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
   #  generator: "-G\"Visual Studio 16 2019\""
   #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
-  #- PLATFORM: x86
-  #  CONFIGURATION: Release
-  #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-  #  generator: "-G\"Visual Studio 12 2013\""
-  #  glmArguments: -DGLM_TEST_FORCE_PURE=ON
   - PLATFORM: x64
     CONFIGURATION: Debug
     APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
     generator: ""
     arch: ""
+    CC: gcc-10
+    CXX: g++-10
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE_CXX_17=ON -DCMAKE_CXX_COMPILER=g++-10
+  - PLATFORM: x86
+    CONFIGURATION: Release
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    generator: "-G\"Visual Studio 12 2013\""
     glmArguments: -DGLM_TEST_FORCE_PURE=ON
 
 
@@ -40,11 +42,11 @@ build_script:
 test_script:
   - ps: |
       # gci -recurse
-      $expp = (gci -recurse expp.exe)[0].FullName
-      write-host $expp
-      gci -recurse *.testresult | rm
+      $expp = (Get-ChildItem -recurse expp.exe)[0].FullName
+      Write-Host $expp
+      Get-ChildItem -recurse *.testresult | Remove-Item
       & $expp
-      $testresult = (gci -recurse *.testresult)[0].FullName
-      gc $testresult | foreach { $v = $_.split(';'); Add-AppveyorTest -Name $v[0] -Framework sgUnit -Filename expp.exe -Outcome $(If ($v[1] -eq "true") {"Passed"} Else {"Failed"}) -Duration 0 }
+      $testresult = (Get-ChildItem -recurse *.testresult)[0].FullName
+      Get-Content $testresult | ForEach { $v = $_.split(';'); Add-AppveyorTest -Name "$v[0]" -Framework sgUnit -Filename expp.exe -Outcome $(If ($v[1] -eq "true") {"Passed"} Else {"Failed"}) -Duration 0 }
 
 deploy: off

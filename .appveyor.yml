@@ -144,9 +144,12 @@ before_build:
   - ps: |
       mkdir build
       cd build
+
       echo generator="$env:generator"
       echo arch="$env:arch"
-      cmake .. "$env:generator" "$env:arch" -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_TEST_ENABLE=ON "$env:glmArguments"
+      echo args="$env:glmArguments"
+
+      cmake .. $env:generator $env:arch -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_TEST_ENABLE=ON $env:glmArguments
 
 build_script:
   - cmake --build . --parallel --config %CONFIGURATION%

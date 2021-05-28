@@ -2,24 +2,24 @@ shallow_clone: true
 
 platform:
   - x64
-  - x86
+  #- x86
 
 configuration:
-  - Debug
+  #- Debug
   - Release
 
 image:
   - Visual Studio 2019
-  - Visual Studio 2017
+  #- Visual Studio 2017
   - Visual Studio 2015
-  - Visual Studio 2013
+  #- Visual Studio 2013
 
 environment:
   matrix:
     - GLM_ARGUMENTS: -DGLM_TEST_FORCE_PURE=ON
-    - GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_SSE2=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+    #- GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_SSE2=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
     - GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_AVX=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
-    - GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_AVX=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON -DGLM_TEST_ENABLE_CXX_14=ON
+    #- GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_AVX=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON -DGLM_TEST_ENABLE_CXX_14=ON
     - GLM_ARGUMENTS: -DGLM_TEST_ENABLE_SIMD_AVX=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON -DGLM_TEST_ENABLE_CXX_17=ON
 
 matrix:
@@ -68,9 +68,10 @@ before_build:
       }
       if ($env:PLATFORM -eq "x64") {
           $env:generator="$env:generator Win64"
+          $env:arch="Win64"
       }
       echo generator="$env:generator"
-      cmake .. -G "$env:generator" -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"
+      cmake .. -G "$env:generator" -A "$env:arch" -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"
 
 build_script:
   - cmake --build . --parallel --config %CONFIGURATION% -- /m /v:minimal

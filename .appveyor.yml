@@ -4,7 +4,7 @@ platform:
   - x64
   - x86
 configuration:
-  #- Debug
+  - Debug
   - Release
 image:
   - Visual Studio 2019
@@ -13,17 +13,27 @@ environment:
   arch: ""
   GLM_ARGUMENTS: -DGLM_TEST_FORCE_PURE=ON
 
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2019
+  environment:
+    generator: "Visual Studio 16 2019"
+-
+  matrix:
+    only:
+      - image: Visual Studio 2019
+        platform: x64
+  environment:
+    arch: "-A`"x64`""
+
 before_build:
   - ps: |
       mkdir build
       cd build
-
-      $env:generator="Visual Studio 16 2019"
-
-      if ($env:PLATFORM -eq "x64") {
-        $env:arch="-A`"x64`""
-      }
       echo generator="$env:generator"
+      echo arch="$env:arch"
       cmake .. -G"$env:generator" $env:arch -DCMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER/install" -DGLM_QUIET=ON -DGLM_TEST_ENABLE=ON "$env:GLM_ARGUMENTS"
 
 build_script:

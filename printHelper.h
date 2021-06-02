@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <array>
+#include <cassert>
 
 namespace expp
 {
@@ -42,6 +43,37 @@ namespace expp
 		{
 			s << "\t" << ViewR(*i) << "\n";
 		}
+	}
+
+	template <typename T, typename T1, typename T2>
+	math::Rational reportMyIterDiff(
+		expp::MyIter<T1> const& vals,
+		expp::MyIter<T2> const& base
+	)
+	{
+		math::Rational maxDiff(0);
+
+		typename expp::MyIter<T1>::const_iterator valsEnd = vals.end();
+		typename expp::MyIter<T2>::const_iterator baseEnd = base.end();
+		typename expp::MyIter<T1>::const_iterator valsIt = vals.begin();
+		typename expp::MyIter<T2>::const_iterator baseIt = base.begin();
+
+		for (; valsIt != valsEnd; ++valsIt, ++baseIt)
+		{
+			T tDiff = *valsIt - static_cast<T>((*baseIt).to_double());
+			math::Rational diff = tDiff;
+			if (diff < 0) diff = -diff;
+
+			std::cout << "\t" << *valsIt << "  err: " << expp::ViewR(diff) << "\n";
+
+			if (maxDiff < diff) maxDiff = diff;
+
+		}
+		assert(baseIt == baseEnd);
+
+		std::cout << "\t\tmax err: " << expp::ViewR(maxDiff) << "\n";
+
+		return maxDiff;
 	}
 
 }

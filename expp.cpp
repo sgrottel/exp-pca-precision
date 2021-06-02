@@ -1,6 +1,7 @@
 ﻿// expp.cpp : Defines the entry point for the application.
 //
 
+#include "findEigenvalues.h"
 #include "testdata.h"
 #include "evaluator.h"
 #include "printHelper.h"
@@ -77,6 +78,64 @@ int main()
 
 	// eigenvalue search?
 	// https://www.wolframalpha.com/input/?i=eigenvalue+%7B%7B-1%2C2%2C5%7D%2C%7B3%2F4%2C4%2C-12%2F2%7D%2C%7B7%2C-8%2C9%7D%7D
+
+
+	reportTest.start(std::cout, "Double eigenvalues 3x3") << ":\n";
+	{
+		std::array<double, 3> eigenvalues;
+		std::array<std::array<double, 3>, 3> eigenvectors;
+		unsigned int num = expp::findEigenvaluesSymReal(covarBase, eigenvalues, eigenvectors);
+		if (num == 3)
+		{
+			expp::sortEigenvalues(eigenvalues, eigenvectors);
+			error = math::Rational(0);
+			for (unsigned int d = 0; d < num; ++d)
+			{
+				std::cout << "eval[" << d << "] = " << eigenvalues[d] << "\n";
+			}
+			for (unsigned int d = 0; d < num; ++d)
+			{
+				std::cout << "evec[" << d << "] = " << eigenvectors[d][0] << "\n"
+					<< "\t" << eigenvectors[d][1] << "\n"
+					<< "\t" << eigenvectors[d][2] << "\n";
+			}
+		}
+		else
+		{
+			std::cerr << "Found only " << num << " Eigenvalues.\n";
+			error = math::Rational(1);
+		}
+	}
+	reportTest.result(testResults, math::Rational(0.1), error);
+
+
+	reportTest.start(std::cout, "Float eigenvalues 3x3") << ":\n";
+	{
+		std::array<float, 3> eigenvalues;
+		std::array<std::array<float, 3>, 3> eigenvectors;
+		unsigned int num = expp::findEigenvaluesSymReal(covarBase, eigenvalues, eigenvectors);
+		if (num == 3)
+		{
+			expp::sortEigenvalues(eigenvalues, eigenvectors);
+			error = math::Rational(0);
+			for (unsigned int d = 0; d < num; ++d)
+			{
+				std::cout << "eval[" << d << "] = " << eigenvalues[d] << "\n";
+			}
+			for (unsigned int d = 0; d < num; ++d)
+			{
+				std::cout << "evec[" << d << "] = " << eigenvectors[d][0] << "\n"
+					<< "\t" << eigenvectors[d][1] << "\n"
+					<< "\t" << eigenvectors[d][2] << "\n";
+			}
+		}
+		else
+		{
+			std::cerr << "Found only " << num << " Eigenvalues.\n";
+			error = math::Rational(1);
+		}
+	}
+	reportTest.result(testResults, math::Rational(0.1), error);
 
 
 	testResults.close();

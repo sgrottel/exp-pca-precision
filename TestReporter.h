@@ -1,9 +1,10 @@
-#ifndef _TestReporter_h_included_
-#define _TestReporter_h_included_
+#ifndef _testreporter_h_included_
+#define _testreporter_h_included_
 #pragma once
 
 #include <string>
 #include "math_Rational.h"
+#include "printHelper.h"
 
 namespace expp
 {
@@ -31,4 +32,4 @@ namespace expp
 
 }
 
-#endif /* _TestReporter_h_included_ */
+#endif /* _testreporter_h_included_ */

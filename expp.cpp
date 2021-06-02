@@ -84,7 +84,7 @@ int main()
 	{
 		std::array<double, 3> eigenvalues;
 		std::array<std::array<double, 3>, 3> eigenvectors;
-		unsigned int num = expp::findEigenvaluesSymReal(covarBase, eigenvalues, eigenvectors);
+		unsigned int num = expp::findEigenvaluesSymReal<3, double>(covarBase, eigenvalues, eigenvectors);
 		if (num == 3)
 		{
 			expp::sortEigenvalues(eigenvalues, eigenvectors);
@@ -113,7 +113,7 @@ int main()
 	{
 		std::array<float, 3> eigenvalues;
 		std::array<std::array<float, 3>, 3> eigenvectors;
-		unsigned int num = expp::findEigenvaluesSymReal(covarBase, eigenvalues, eigenvectors);
+		unsigned int num = expp::findEigenvaluesSymReal<3, float>(covarBase, eigenvalues, eigenvectors);
 		if (num == 3)
 		{
 			expp::sortEigenvalues(eigenvalues, eigenvectors);

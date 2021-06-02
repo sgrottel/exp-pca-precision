@@ -40,6 +40,24 @@ environment:
     CXX: g++-7
     glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
 
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: clang-9
+    CXX: clang++-9
+    glmArguments: -DGLM_TEST_FORCE_PURE=ON -DGLM_TEST_ENABLE=ON -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE_CXX_17=ON
+
+  - PLATFORM: x64
+    CONFIGURATION: Debug
+    APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    generator: ""
+    arch: ""
+    CC: clang-11
+    CXX: clang++-11
+    glmArguments: -DCMAKE_BUILD_TYPE=Debug -DGLM_TEST_ENABLE=ON -DGLM_TEST_ENABLE_CXX_17=ON -DGLM_TEST_ENABLE_LANG_EXTENSIONS=ON
+
   #- PLATFORM: x64
   #  CONFIGURATION: Debug
   #  APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu

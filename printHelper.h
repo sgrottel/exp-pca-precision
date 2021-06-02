@@ -64,7 +64,7 @@ namespace expp
 		for (; valsIt != valsEnd; ++valsIt, ++baseIt)
 		{
 			T tDiff = *valsIt - static_cast<T>((*baseIt).to_double());
-			math::Rational diff = tDiff;
+			math::Rational diff = static_cast<double>(tDiff);
 			if (diff < 0) diff = -diff;
 
 			std::cout << "\t" << *valsIt << "  err: " << expp::ViewR(diff) << "\n";

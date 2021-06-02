@@ -35,30 +35,7 @@ namespace math
             a(0),
             b(1)
         {
-            double x = static_cast<double>(f);
-            if (!std::isfinite(x))
-            {
-                throw std::range_error("Error: Rational::double");
-            }
-            int exponent = 0;
-            x = std::frexp(x, &exponent);
-            for (int j = 0; std::abs(x) > 0.0 && j < DBL_MANT_DIG; ++j)
-            {
-                double bit = 0;
-                x = std::modf(x * 2, &bit);
-                a <<= 1;
-                a += static_cast<std::int32_t>(bit);
-                --exponent;
-            }
-            if (exponent > 0)
-            {
-                a <<= exponent;
-            }
-            else if (exponent < 0)
-            {
-                b <<= -exponent;
-            }
-            reduce();
+            operator=(Rational(static_cast<double>(f)));
         }
 
         Rational(double x) :

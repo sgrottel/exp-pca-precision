@@ -25,11 +25,14 @@ namespace expp
 		ViewR& operator=(ViewR const& s);
 
 		math::Rational const& m_r;
+
+		template<typename ts>
+		friend ts& operator<<(ts& s, ViewR const& v);
 	};
 
 	template<typename ts>
-	static ts& operator<<(ts& s, ViewR const& v) {
-		return s << std::fixed << std::setprecision(20) << v.r().to_double() << " (" << v.r() << ")";
+	ts& operator<<(ts& s, ViewR const& v) {
+		return s << std::fixed << std::setprecision(20) << v.r().to_double() << " (" << v.m_r << ")";
 	}
 
 	/// <summary>

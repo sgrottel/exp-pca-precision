@@ -1,64 +1,120 @@
 ﻿// expp.cpp : Defines the entry point for the application.
 //
 
+#include "findEigenvalues.h"
 #include "testdata.h"
 #include "evaluator.h"
 #include "printHelper.h"
+#include "TestReporter.h"
 
 #include <iostream>
 #include <fstream>
-#include <cassert>
 #include <string>
 
-static std::string testName = "unknown";
 
-template<typename TS>
-static TS& startTest(TS& s, char const* name)
+namespace
 {
-	testName = name;
-	return s << name;
-}
 
-template<typename TS>
-static void reportTest(TS& s, math::Rational const& exp, math::Rational const& act)
-{
-	s << testName << " (" << expp::ViewR(act) << ");" << ((act < exp) ? "true" : "false") << "\n";
-}
-
-template <typename T, typename T1, typename T2>
-math::Rational reportMyIterDiff(
-	expp::MyIter<T1> const& vals,
-	expp::MyIter<T2> const& base
-)
-{
-	math::Rational maxDiff(0);
-
-	typename expp::MyIter<T1>::const_iterator valsEnd = vals.end();
-	typename expp::MyIter<T2>::const_iterator baseEnd = base.end();
-	typename expp::MyIter<T1>::const_iterator valsIt = vals.begin();
-	typename expp::MyIter<T2>::const_iterator baseIt = base.begin();
-
-	for (; valsIt != valsEnd; ++valsIt, ++baseIt)
+	template<class T, unsigned int D>
+	math::Rational testEigenvalues(
+		std::array<std::array<math::Rational, 4>, 4> const& covar,
+		expp::TestData const& refData
+		)
 	{
-		T tDiff = *valsIt - static_cast<T>((*baseIt).to_double());
-		math::Rational diff = tDiff;
-		if (diff < 0) diff = -diff;
+		math::Rational error(1);
 
-		std::cout << "\t" << *valsIt << "  err: " << expp::ViewR(diff) << "\n";
+		std::array<T, D> eigenvalues;
+		std::array<std::array<T, D>, D> eigenvectors;
+		unsigned int num = expp::findEigenvaluesSymReal<D, T>(covar, eigenvalues, eigenvectors);
+		if (num == D)
+		{
+			error = 0;
 
-		if (maxDiff < diff) maxDiff = diff;
+			expp::sortEigenvalues(eigenvalues, eigenvectors);
 
+			std::cout << "Eigenvalues:\n";
+			for (unsigned int i = 0; i < D; ++i)
+			{
+				std::cout << "\tval" << i << ":\t" << std::fixed << std::setprecision(80) << eigenvalues[i] << "\n";
+				math::Rational ref = refData.getReferenceEigenvalue(D, i);
+				std::cout << "\tref:\t" << expp::ViewR(ref) << "\n";
+
+				math::Rational diff = ref - math::Rational(static_cast<double>(eigenvalues[i]));
+				if (diff < 0) diff = -diff;
+				std::cout << "\tdiff:\t" << expp::ViewR(diff) << "\n";
+				if (diff > error) error = diff;
+			}
+
+			std::cout << "Eigenvectors:\n";
+			for (unsigned int i = 0; i < D; ++i) {
+				std::array<T, D> const& actEVec = eigenvectors[i];
+				std::cout << "\tv" << i << ":\n";
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					std::cout << "\t\t" << std::fixed << std::setprecision(80) << actEVec[c] << "\n";
+				}
+
+				double actLen = 0;
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					actLen += static_cast<double>(actEVec[c]) * static_cast<double>(actEVec[c]);
+				}
+				actLen = std::sqrt(actLen);
+				//std::cout << "\tlen:\n\t\t" << std::fixed << std::setprecision(80) << actLen << "\n";
+
+				std::array<math::Rational, D> expEVec;
+				double refLen = 0;
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					expEVec[c] = refData.getReferenceEigenvector(D, i, c);
+					refLen += expEVec[c].to_double() * expEVec[c].to_double();
+				}
+				refLen = std::sqrt(refLen);
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					expEVec[c] *= actLen / refLen;
+				}
+				if (std::signbit(actEVec[0]) != std::signbit(expEVec[0].to_double()))
+				{
+					for (unsigned int c = 0; c < D; ++c)
+					{
+						expEVec[c] = -expEVec[c];
+					}
+				}
+
+				std::cout << "\tref:\n";
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					std::cout << "\t\t" << expp::ViewR(expEVec[c]) << "\n";
+				}
+				std::cout << "\tdiff\n";
+				for (unsigned int c = 0; c < D; ++c)
+				{
+					math::Rational diff = expEVec[c] - math::Rational(static_cast<double>(actEVec[c]));
+					if (diff < 0) diff = -diff;
+					std::cout << "\t\t" << expp::ViewR(diff) << "\n";
+					if (diff > error) error = diff;
+				}
+			}
+
+			std::cout << "Overall error:\n\t" << expp::ViewR(error) << "\n";
+		}
+		else
+		{
+			std::cerr << "Found only " << num << " Eigenvalues.\n";
+		}
+
+		return error;
 	}
-	assert(baseIt == baseEnd);
 
-	std::cout << "\t\tmax err: " << expp::ViewR(maxDiff) << "\n";
 
-	return maxDiff;
 }
+
 
 int main()
 {
 	expp::TestData testData;
+	expp::TestReporter reportTest;
 
 	expp::Evaluator<math::Rational> evalBase(testData);
 	expp::Evaluator<double> evalDouble(testData);
@@ -75,52 +131,86 @@ int main()
 
 	evalBase.calcCenter();
 	std::array<math::Rational, 4> const& centerBase = evalBase.getCenter();
-	startTest(std::cout, "Ground truth center") << ":\n";
+	reportTest.start(std::cout, "Ground truth center") << ":\n";
 	expp::printMyIter(std::cout, expp::makeMyIter(centerBase));
 	std::cout << "\n";
 
 	evalDouble.calcCenter();
-	startTest(std::cout, "Double center naive") << ":\n";
-	error = reportMyIterDiff<double>(
+	reportTest.start(std::cout, "Double center naive") << ":\n";
+	error = expp::reportMyIterDiff<double>(
 		expp::makeMyIter(evalDouble.getCenter()),
 		expp::makeMyIter(centerBase));
-	reportTest(testResults, math::Rational(0.1), error);
+	reportTest.result(testResults, math::Rational(0.1), error);
 	std::cout << "\n";
 
 	evalFloat.calcCenter();
-	startTest(std::cout, "Float center naive") << ":\n";
-	error = reportMyIterDiff<float>(
+	reportTest.start(std::cout, "Float center naive") << ":\n";
+	error = expp::reportMyIterDiff<float>(
 		expp::makeMyIter(evalFloat.getCenter()),
 		expp::makeMyIter(centerBase));
-	reportTest(testResults, math::Rational(0.1), error);
+	reportTest.result(testResults, math::Rational(0.1), error);
 	std::cout << "\n";
 
 
 	evalBase.calcCovarMatrix();
 	std::array<std::array<math::Rational, 4>, 4> const& covarBase = evalBase.getCovar();
-	startTest(std::cout, "Ground truth covar") << ":\n";
+	reportTest.start(std::cout, "Ground truth covar") << ":\n";
 	expp::printMyIter(std::cout, expp::makeMyIter(covarBase));
 	std::cout << "\n";
 
 	evalDouble.calcCovarMatrix();
-	startTest(std::cout, "Double covar naive") << ":\n";
-	error = reportMyIterDiff<double>(
+	reportTest.start(std::cout, "Double covar naive") << ":\n";
+	error = expp::reportMyIterDiff<double>(
 		expp::makeMyIter(evalDouble.getCovar()),
 		expp::makeMyIter(covarBase));
-	reportTest(testResults, math::Rational(0.1), error);
+	reportTest.result(testResults, math::Rational(0.1), error);
 	std::cout << "\n";
 
 	evalFloat.calcCovarMatrix();
-	startTest(std::cout, "Float covar naive") << ":\n";
-	error = reportMyIterDiff<float>(
+	reportTest.start(std::cout, "Float covar naive") << ":\n";
+	error = expp::reportMyIterDiff<float>(
 		expp::makeMyIter(evalFloat.getCovar()),
 		expp::makeMyIter(covarBase));
-	reportTest(testResults, math::Rational(0.1), error);
+	reportTest.result(testResults, math::Rational(0.1), error);
 	std::cout << "\n";
 
 
-	// eigenvalue search?
-	// https://www.wolframalpha.com/input/?i=eigenvalue+%7B%7B-1%2C2%2C5%7D%2C%7B3%2F4%2C4%2C-12%2F2%7D%2C%7B7%2C-8%2C9%7D%7D
+	// eigenvalue search
+	reportTest.start(std::cout, "Double eigenvalues 2x2") << ":\n";
+	std::cout << sizeof(double) << "\n";
+	error = testEigenvalues<double, 2>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
+
+	reportTest.start(std::cout, "Float eigenvalues 2x2") << ":\n";
+	std::cout << sizeof(float) << "\n";
+	error = testEigenvalues<float, 2>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
+
+	reportTest.start(std::cout, "Double eigenvalues 3x3") << ":\n";
+	std::cout << sizeof(double) << "\n";
+	error = testEigenvalues<double, 3>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
+
+	reportTest.start(std::cout, "Float eigenvalues 3x3") << ":\n";
+	std::cout << sizeof(float) << "\n";
+	error = testEigenvalues<float, 3>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
+
+	reportTest.start(std::cout, "Double eigenvalues 4x4") << ":\n";
+	std::cout << sizeof(double) << "\n";
+	error = testEigenvalues<double, 4>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
+
+	reportTest.start(std::cout, "Float eigenvalues 4x4") << ":\n";
+	std::cout << sizeof(float) << "\n";
+	error = testEigenvalues<float, 4>(covarBase, testData);
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
 
 
 	testResults.close();

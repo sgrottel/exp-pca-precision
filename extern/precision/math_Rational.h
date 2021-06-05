@@ -31,13 +31,6 @@ namespace math
             reduce();
         }
 
-        Rational(float f) :
-            a(0),
-            b(1)
-        {
-            operator=(Rational(static_cast<double>(f)));
-        }
-
         Rational(double x) :
             a(0),
             b(1)
@@ -48,7 +41,8 @@ namespace math
             }
             int exponent = 0;
             x = std::frexp(x, &exponent);
-            for (int j = 0; std::abs(x) > 0.0 && j < DBL_MANT_DIG; ++j)
+            for (int j = 0;
+                std::fpclassify(x) != FP_ZERO && j < DBL_MANT_DIG; ++j)
             {
                 double bit = 0;
                 x = std::modf(x * 2, &bit);

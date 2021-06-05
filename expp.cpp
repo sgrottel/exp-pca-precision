@@ -130,49 +130,49 @@ int main()
 	math::Rational error;
 
 	evalBase.calcCenter();
-	//std::array<math::Rational, 4> const& centerBase = evalBase.getCenter();
-	//reportTest.start(std::cout, "Ground truth center") << ":\n";
-	//expp::printMyIter(std::cout, expp::makeMyIter(centerBase));
-	//std::cout << "\n";
+	std::array<math::Rational, 4> const& centerBase = evalBase.getCenter();
+	reportTest.start(std::cout, "Ground truth center") << ":\n";
+	expp::printMyIter(std::cout, expp::makeMyIter(centerBase));
+	std::cout << "\n";
 
-	//evalDouble.calcCenter();
-	//reportTest.start(std::cout, "Double center naive") << ":\n";
-	//error = expp::reportMyIterDiff<double>(
-	//	expp::makeMyIter(evalDouble.getCenter()),
-	//	expp::makeMyIter(centerBase));
-	//reportTest.result(testResults, math::Rational(0.1), error);
-	//std::cout << "\n";
+	evalDouble.calcCenter();
+	reportTest.start(std::cout, "Double center naive") << ":\n";
+	error = expp::reportMyIterDiff<double>(
+		expp::makeMyIter(evalDouble.getCenter()),
+		expp::makeMyIter(centerBase));
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
 
-	//evalFloat.calcCenter();
-	//reportTest.start(std::cout, "Float center naive") << ":\n";
-	//error = expp::reportMyIterDiff<float>(
-	//	expp::makeMyIter(evalFloat.getCenter()),
-	//	expp::makeMyIter(centerBase));
-	//reportTest.result(testResults, math::Rational(0.1), error);
-	//std::cout << "\n";
+	evalFloat.calcCenter();
+	reportTest.start(std::cout, "Float center naive") << ":\n";
+	error = expp::reportMyIterDiff<float>(
+		expp::makeMyIter(evalFloat.getCenter()),
+		expp::makeMyIter(centerBase));
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
 
 
 	evalBase.calcCovarMatrix();
 	std::array<std::array<math::Rational, 4>, 4> const& covarBase = evalBase.getCovar();
-	//reportTest.start(std::cout, "Ground truth covar") << ":\n";
-	//expp::printMyIter(std::cout, expp::makeMyIter(covarBase));
-	//std::cout << "\n";
+	reportTest.start(std::cout, "Ground truth covar") << ":\n";
+	expp::printMyIter(std::cout, expp::makeMyIter(covarBase));
+	std::cout << "\n";
 
-	//evalDouble.calcCovarMatrix();
-	//reportTest.start(std::cout, "Double covar naive") << ":\n";
-	//error = expp::reportMyIterDiff<double>(
-	//	expp::makeMyIter(evalDouble.getCovar()),
-	//	expp::makeMyIter(covarBase));
-	//reportTest.result(testResults, math::Rational(0.1), error);
-	//std::cout << "\n";
+	evalDouble.calcCovarMatrix();
+	reportTest.start(std::cout, "Double covar naive") << ":\n";
+	error = expp::reportMyIterDiff<double>(
+		expp::makeMyIter(evalDouble.getCovar()),
+		expp::makeMyIter(covarBase));
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
 
-	//evalFloat.calcCovarMatrix();
-	//reportTest.start(std::cout, "Float covar naive") << ":\n";
-	//error = expp::reportMyIterDiff<float>(
-	//	expp::makeMyIter(evalFloat.getCovar()),
-	//	expp::makeMyIter(covarBase));
-	//reportTest.result(testResults, math::Rational(0.1), error);
-	//std::cout << "\n";
+	evalFloat.calcCovarMatrix();
+	reportTest.start(std::cout, "Float covar naive") << ":\n";
+	error = expp::reportMyIterDiff<float>(
+		expp::makeMyIter(evalFloat.getCovar()),
+		expp::makeMyIter(covarBase));
+	reportTest.result(testResults, math::Rational(0.1), error);
+	std::cout << "\n";
 
 
 	// eigenvalue search
@@ -211,6 +211,7 @@ int main()
 	error = testEigenvalues<float, 4>(covarBase, testData);
 	reportTest.result(testResults, math::Rational(0.1), error);
 	std::cout << "\n";
+
 
 	testResults.close();
 

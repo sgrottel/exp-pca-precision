@@ -42,6 +42,8 @@ namespace expp
 		public:
 			friend class MyIter<std::array<std::array<T, D1>, D1>>;
 
+			const_iterator(const_iterator const& s) : m_d(s.m_d), m_x(s.m_x), m_y(s.m_y) {}
+
 			inline const_iterator& operator++() {
 				++m_y;
 				if (m_y >= D1)
@@ -82,6 +84,7 @@ namespace expp
 		};
 
 		MyIter(DT const& d) : m_d(d) {}
+		MyIter(MyIter const& s) : m_d(s.m_d) {}
 
 		const_iterator begin() const { return const_iterator(m_d, 0, 0); }
 		const_iterator end() const { return const_iterator(m_d, D1, D1); }

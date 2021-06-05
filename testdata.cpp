@@ -1,5 +1,7 @@
 ﻿#include "testdata.h"
 
+#include <stdexcept>
+
 namespace
 {
 #ifdef __clang__
@@ -152,6 +154,119 @@ math::Rational const * expp::TestData::getPoint(unsigned int i) const
 	return &_1aga[i * 4];
 }
 
+math::Rational expp::TestData::getReferenceEigenvalue(unsigned int D, unsigned int i) const
+{
+	switch (D) {
+	case 2:
+		switch (i) {
+		case 0: return 9.62447;
+		case 1: return 9.62431;
+		}
+		break;
+	case 3:
+		switch (i) {
+		case 0: return 37.3274;
+		case 1: return 9.62431;
+		case 2: return 7.9255;
+		}
+		break;
+	case 4:
+		switch (i) {
+		case 0: return 37.3477;
+		case 1: return 9.62471;
+		case 2: return 7.94017;
+		case 3: return 1.06171;
+		}
+		break;
+	}
+	throw std::runtime_error("arguments wrong");
+}
+
+math::Rational expp::TestData::getReferenceEigenvector(unsigned int D, unsigned int i, unsigned int c) const
+{
+	switch (D) {
+	case 2:
+		switch (i) {
+		case 0:
+			switch (c) {
+			case 0: return -0.503511;
+			case 1: return 1;
+			}
+			break;
+		case 1:
+			switch (c) {
+			case 0: return 1.98605;
+			case 1: return 1;
+			}
+			break;
+		}
+		break;
+	case 3:
+		switch (i) {
+		case 0:
+			switch (c) {
+			case 0: return -0.154973;
+			case 1: return 0.193161;
+			case 2: return 1;
+			}
+			break;
+		case 1:
+			switch (c) {
+			case 0: return -158565;
+			case 1: return -127222;
+			case 2: return 1;
+			}
+			break;
+		case 2:
+			switch (c) {
+			case 0: return 2.52702;
+			case 1: return -3.1496;
+			case 2: return 1;
+			}
+			break;
+		}
+		break;
+	case 4:
+		switch (i) {
+		case 0:
+			switch (c) {
+			case 0: return -6.35322;
+			case 1: return 7.91546;
+			case 2: return 41.0302;
+			case 3: return 1;
+			}
+			break;
+		case 1:
+			switch (c) {
+			case 0: return -114.622;
+			case 1: return -92.2071;
+			case 2: return 0.015585;
+			case 3: return 1;
+			}
+			break;
+		case 2:
+			switch (c) {
+			case 0: return 13.1772;
+			case 1: return -16.3688;
+			case 2: return 5.17387;
+			case 3: return 1;
+			}
+			break;
+		case 3:
+			switch (c) {
+			case 0: return -0.0192777;
+			case 1: return 0.0348035;
+			case 2: return -0.0340716;
+			case 3: return 1;
+			}
+			break;
+		}
+		break;
+	}
+	throw std::runtime_error("arguments wrong");
+}
+
+
 /*
 
 Ground truth covar matrix
@@ -178,6 +293,7 @@ Ground truth covar matrix
 
 
 Wolfram alpha:
+https://www.wolframalpha.com/input/?i=eigenvalue+%7B%7B-1%2C2%2C5%7D%2C%7B3%2F4%2C4%2C-12%2F2%7D%2C%7B7%2C-8%2C9%7D%7D
 
 
 2x2
